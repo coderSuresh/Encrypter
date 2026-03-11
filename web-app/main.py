@@ -24,3 +24,28 @@ def ceaser_cipher(payload: dict = Body(...)):
         cipher_text += letter
     
     return {"cipher_text":cipher_text}
+
+@app.post("/encrypt/rail-fence")
+def rail_fence(payload: dict = Body(...)):
+
+    rails = payload.get("rails")
+    plain_text = payload.get("plain_text").replace(" ", "")  # remove spaces
+
+    
+    fence = [ [] for i in range(rails)] # create rails
+    
+    rail = 0
+    direction = 1 # 1 = down, -1 = up
+
+    for char in plain_text:
+        fence[rail].append(char)
+        rail += direction
+
+        if rail == 0 or rail == rails - 1:
+            direction *= -1
+
+    cipher_text = ""
+    for row in fence:
+        cipher_text += ''.join(row)
+
+    return {"cipher_text": cipher_text}
